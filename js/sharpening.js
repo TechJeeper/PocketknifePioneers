@@ -7,6 +7,7 @@ class SharpeningMinigame {
     this.game = game;
     this.activeKnife = null;
     this.animId = null;
+    this.isRunning = false;
     this.position = 0;
     this.direction = 1;
     this.speed = 2.2;
@@ -15,18 +16,25 @@ class SharpeningMinigame {
   }
 
   start(knife, onComplete) {
-    if (this.animId !== null) {
-      cancelAnimationFrame(this.animId);
-      this.animId = null;
-    }
+    this.stopAnimation();
+
     this.activeKnife = knife;
     this.onComplete = onComplete;
     this.position = 0;
     this.direction = 1;
+    this.isRunning = true;
 
     sounds.click();
     this.renderModal();
     this.animate();
+  }
+
+  stopAnimation() {
+    this.isRunning = false;
+    if (this.animId !== null) {
+      cancelAnimationFrame(this.animId);
+      this.animId = null;
+    }
   }
 
   renderModal() {
@@ -65,6 +73,8 @@ class SharpeningMinigame {
   }
 
   animate() {
+    if (!this.isRunning) return;
+
     this.position += this.direction * this.speed;
     if (this.position >= 96) {
       this.position = 96;
@@ -83,10 +93,7 @@ class SharpeningMinigame {
   }
 
   lockAngle() {
-    if (this.animId !== null) {
-      cancelAnimationFrame(this.animId);
-      this.animId = null;
-    }
+    this.stopAnimation();
 
     const hit = this.position >= this.targetStart && this.position <= this.targetEnd;
     const nearHit = Math.abs(this.position - 50) <= 20;
