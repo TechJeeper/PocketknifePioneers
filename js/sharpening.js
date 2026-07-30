@@ -15,6 +15,10 @@ class SharpeningMinigame {
   }
 
   start(knife, onComplete) {
+    if (this.animId !== null) {
+      cancelAnimationFrame(this.animId);
+      this.animId = null;
+    }
     this.activeKnife = knife;
     this.onComplete = onComplete;
     this.position = 0;
@@ -75,9 +79,7 @@ class SharpeningMinigame {
       marker.style.left = `${this.position}%`;
     }
 
-    if (this.animId !== null) {
-      this.animId = requestAnimationFrame(() => this.animate());
-    }
+    this.animId = requestAnimationFrame(() => this.animate());
   }
 
   lockAngle() {
